@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-#define MAX_SIZE 65536 //데이터의 개수 지정
+#define MAX_SIZE 524288 //데이터의 개수 지정
 #define SWAP(x,y,t) ((t)=(x), (x)=(y), (y)=(t))    //SWAP함수 설정
 int original[MAX_SIZE];    //랜덤함수로 만든 데이터를 저장할 원본 배열
 int list[MAX_SIZE];    //각 정렬 알고리즘에서 사용할 데이터 배열
@@ -38,20 +38,20 @@ void selection_sort(int list[], int n)
     }
 }
 
-//선택정렬 택해서 정방향 데이터 출력하려 함.
-void selection_sort_fd(int list[], int n)
-{
-    int i, j, least, tmp;
-
-    printf("정렬 중... ");
-    for (i = 0; i < n - 1; i++)
-    {
-        least = i;
-        for (j = i + 1; j < n; j++)
-            if (list[j] < list[least]) least = j;
-        SWAP(list[i], list[least], tmp);
-    }
-}
+////선택정렬 택해서 정방향 데이터 출력하려 함.
+//void selection_sort_fd(int list[], int n)
+//{
+//    int i, j, least, tmp;
+//
+//    printf("정렬 중... ");
+//    for (i = 0; i < n - 1; i++)
+//    {
+//        least = i;
+//        for (j = i + 1; j < n; j++)
+//            if (list[j] < list[least]) least = j;
+//        SWAP(list[i], list[least], tmp);
+//    }
+//}
 
 //삽입 정렬
 void insertion_sort(int list[], int n)
@@ -171,6 +171,52 @@ void heap_sort(int list[], int n) {
     }
 }
 
+//힙정렬을 택해서 출력하려함.
+int swap2(int* a, int* b) {
+    int temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+void heapify2(int list[], int n, int i) {
+    int parentNode = i;
+    int leftChildNode = i * 2 + 1;
+    int rightChildNode = i * 2 + 2;
+
+
+    // 왼쪽 자식 노드가 존재하면서 부모노드와 값 비교.
+    if (leftChildNode < n && list[parentNode] < list[leftChildNode]) {
+        parentNode = leftChildNode;
+    }
+    // 오른쪽 자식 노드가 존재하면서 부모노드와 값 비교.
+    if (rightChildNode < n && list[parentNode] < list[rightChildNode]) {
+        parentNode = rightChildNode;
+    }
+
+
+    // 왼쪽 or 오른쪽 자식 노드 중 부모 노드보다 큰 값이 존재한 경우
+    if (i != parentNode) {
+        swap2(&list[parentNode], &list[i]);
+        // 초기 부모노드가 제자지를 찾을 때까지 내려갑니다.
+        heapify2(list, n, parentNode);
+    }
+}
+
+void heap_sort2(int list[], int n) {
+    // 최대 힙(Max Heap) 구성
+    printf("정렬 중... ");
+    for (int i = (n / 2) - 1; i >= 0; i--) {
+        heapify2(list, n, i);
+    }
+
+    // Root에 위치한 최대값을 마지막 노드와 바꿔가며 Heap 재구성
+    // Heap의 크기를 줄여가며 값이 큰 원소를 차례로 가져옵니다.
+    for (int i = n - 1; i > 0; i--) {
+        swap2(&list[0], &list[i]);
+        heapify2(list, i, 0);
+    }
+}
+
 //원본 배열을 복사하는 함수
 void CopyArr(void)
 {
@@ -225,7 +271,7 @@ void main()
 
     CopyArr();
     printf("\n");
-    selection_sort_fd(list, n);
+    heap_sort2(list, n);
     printf("완료 !\n");
     printf("\n");
 
